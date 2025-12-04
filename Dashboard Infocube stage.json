@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 0,
   "links": [],
   "panels": [
     {
@@ -1202,8 +1202,193 @@
         "uid": "ff3e8bjmtnl6oe"
       },
       "fieldConfig": {
-        "defaults": {},
-        "overrides": []
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "filterable": true,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "wrapHeaderText": false,
+            "wrapText": false
+          },
+          "fieldMinMax": false,
+          "mappings": [
+            {
+              "options": {
+                "949110": {
+                  "color": "semi-dark-orange",
+                  "index": 7,
+                  "text": "Inbound Anomaly Score"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "from": 942000,
+                "result": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "SQL Injection"
+                },
+                "to": 942999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 941000,
+                "result": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "Cross-Site Scripting (XSS)"
+                },
+                "to": 941999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 932000,
+                "result": {
+                  "color": "purple",
+                  "index": 2,
+                  "text": "Remote Code Execution"
+                },
+                "to": 932999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 930000,
+                "result": {
+                  "color": "semi-dark-orange",
+                  "index": 3,
+                  "text": "Local File Inclusion"
+                },
+                "to": 930999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 920000,
+                "result": {
+                  "color": "yellow",
+                  "index": 4,
+                  "text": "Protocol Violation HTTP"
+                },
+                "to": 920999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 933000,
+                "result": {
+                  "color": "purple",
+                  "index": 5,
+                  "text": "PHP Injection"
+                },
+                "to": 933999
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 913000,
+                "result": {
+                  "color": "semi-dark-orange",
+                  "index": 6,
+                  "text": "Scanner Reputation"
+                },
+                "to": 913999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 191
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "labelTypes"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 591
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Line"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 372
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "labels"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 273
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 230
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -1213,13 +1398,15 @@
       },
       "id": 18,
       "options": {
-        "dedupStrategy": "none",
-        "enableInfiniteScrolling": false,
-        "enableLogDetails": true,
-        "showControls": false,
-        "showTime": false,
-        "sortOrder": "Descending",
-        "wrapLogMessage": false
+        "cellHeight": "sm",
+        "enablePagination": false,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
       },
       "pluginVersion": "12.3.0",
       "targets": [
@@ -1230,13 +1417,57 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{job=\"modsecurity\"}\r\n|~ \"ModSecurity: Access denied\"\r\n| regexp `client\\s(?P<ip>[0-9\\.]+)\\].*\\[msg\\s\"(?P<msg>[^\"]+)\"\\]`\r\n| line_format \"🚫 IP: {{.ip}} |⚠️ Msg: {{.msg}}\"",
+          "expr": "{job=\"modsecurity\"}\r\n|~ \"ModSecurity\"\r\n|~ \"\\\\[id \\\"\"\r\n| regexp `id\\s\"(?P<rule_id>[0-9]+)\"`        \r\n| regexp `client\\W+(?P<ip>[0-9\\.]+)`        \r\n| line_format \"{ \\\"IP\\\": \\\"{{.ip}}\\\", \\\"RULE_ID\\\": \\\"{{.rule_id}}\\\" }\"\r\n| rule_id != \"949110\"                         ",
           "queryType": "range",
           "refId": "A"
         }
       ],
       "title": "Attacks",
-      "type": "logs"
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": "|",
+            "format": "json",
+            "keepTime": false,
+            "regExp": "(?<IP>\\S+)\\s*\\|\\s*(?<RULE_ID>\\S+)",
+            "replace": false,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "NewField": false,
+              "Time": false,
+              "id": true,
+              "labelTypes": true,
+              "labels": true,
+              "tsNs": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "949110": "rule_id"
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "RULE_ID"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -1796,12 +2027,12 @@
     "list": []
   },
   "time": {
-    "from": "now-30d",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Server 114 Dashboard",
   "uid": "adgpjvs",
-  "version": 86
+  "version": 94
 }
