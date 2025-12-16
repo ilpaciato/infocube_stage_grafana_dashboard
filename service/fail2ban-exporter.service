@@ -1,0 +1,13 @@
+[Unit]
+Description=Fail2ban Prometheus Exporter
+After=network.target fail2ban.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /usr/local/bin/fail2ban_exporter.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

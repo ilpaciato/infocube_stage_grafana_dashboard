@@ -1,0 +1,10 @@
+[Definition]
+actionstart = 
+actionstop = 
+actioncheck = 
+actionban = curl -s -X POST https://api.telegram.org/bot<TOKEN>/sendMessage \
+              -d chat_id=<CHAT_ID> \
+              -d text="🚨 Fail2Ban: IP <ip> bannato dalla jail <name>"
+actionunban = curl -s -X POST https://api.telegram.org/bot<TOKEN>/sendMessage \
+              -d chat_id=<CHAT_ID> \
+              -d text="✅ Fail2Ban: IP <ip> sbannato dalla jail <name>"

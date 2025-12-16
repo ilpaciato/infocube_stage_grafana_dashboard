@@ -1,0 +1,13 @@
+[Unit]
+Description=Fail2ban Telegram Startup Notification
+After=fail2ban.service
+Wants=fail2ban.service
+
+[Service]
+Type=oneshot
+ExecStart=/etc/fail2ban/scripts/notify_startup.sh
+RemainAfterExit=yes
+User=root
+
+[Install]
+WantedBy=multi-user.target fail2ban.service

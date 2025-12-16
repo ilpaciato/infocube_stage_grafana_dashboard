@@ -1,0 +1,30 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    # La cartella dove hai i file di WordPress
+    root /var/www/html;
+
+    # IMPORTANTE: Mettiamo index.php per primo
+    index index.php index.html index.htm;
+
+    server_name _;
+
+    location / {
+        # Regola standard per WordPress
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # Configurazione per PHP 8.3
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+
+    # Nega l'accesso ai file .htaccess (sicurezza)
+    location ~ /\.ht {
+        deny all;
+    }
+    
+    # Non definiamo access_log qui, così usa quello JSON globale
+}

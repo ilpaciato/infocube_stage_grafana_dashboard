@@ -1,0 +1,96 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/log/positions.yaml
+
+clients:
+  - url: http://10.99.77.24:3100/loki/api/v1/push
+#  - url: http://10.99.77.44:3100/loki/api/v1/push
+#    tenant_id: fake
+
+scrape_configs:
+
+  - job_name: promtail
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: promtail
+          __path__: /var/log/syslog
+
+  - job_name: loki
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: loki
+          __path__: /var/log/syslog
+    relabel_configs:
+      - source_labels: [__line__]
+        regex: '.*loki.*'
+        action: keep
+
+  - job_name: nginx
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: nginx
+          __path__: /var/log/nginx/access.log
+
+  - job_name: nginx_json
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: nginx_geoip
+          __path__: /var/log/nginx/access_json.log
+
+  - job_name: modsecurity
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: modsecurity
+          host: ict-campus-lab
+          __path__: /var/log/nginx/error.log
+
+  - job_name: mysql
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: mysql
+          __path__: /var/log/mysql/*.log
+
+  - job_name: php-fpm
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: php-fpm
+          __path__: /var/log/php*.log
+
+  - job_name: auth
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: auth
+          __path__: /var/log/auth.log
+
+  - job_name: audit
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: audit
+          __path__: /var/log/audit/*.log
+
+  - job_name: vsftpd
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: vsftpd
+          __path__: /var/log/vsftpd.log
+
+  - job_name: fail2ban
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: fail2ban
+          host: ict-campus-lab
+          __path__: /var/log/fail2ban.log

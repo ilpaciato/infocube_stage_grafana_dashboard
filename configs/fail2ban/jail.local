@@ -1,0 +1,101 @@
+[DEFAULT]
+bantime = 120
+findtime = 600
+maxretry = 5
+ignoreip = 10.99.88.114 10.99.88.86 
+#10.99.88.237
+enabled = false
+backend = auto
+usedns = warn
+logencoding = auto
+mode = normal
+banaction = iptables-multiport
+
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 5
+findtime = 600
+bantime = 120
+action = iptables-multiport[name=SSH, port="ssh"]
+         telegram[name=sshd]
+
+[nginx-http-auth]
+enabled = true
+port = http,https
+filter = nginx-http-auth
+logpath = /var/log/nginx/error.log
+maxretry = 5
+findtime = 120
+bantime = 1800
+action = iptables-multiport[name=HTTPAUTH, port="http,https"]
+         telegram[name=nginx-http-auth]
+
+[nginx-noscript]
+enabled = true
+port = http,https
+filter = nginx-noscript
+logpath = /var/log/nginx/access.log
+maxretry = 3
+findtime = 600
+bantime = 120
+action = iptables-multiport[name=NOSCRIPT, port="http,https"]
+         telegram[name=nginx-noscript]
+
+[nginx-badbots]
+enabled = true
+port = http,https
+filter = nginx-badbots
+logpath = /var/log/nginx/access.log
+maxretry = 1
+findtime = 600
+bantime = 120
+action = iptables-multiport[name=BADBOTS, port="http,https"]
+         telegram[name=nginx-badbots]
+
+[modsecurity]
+enabled = true
+port = http,https
+filter = modsecurity
+logpath = /var/log/nginx/error.log
+maxretry = 1
+findtime = 600
+bantime = 120
+action = iptables-multiport[name=MODSEC, port="http,https"]
+         telegram[name=modsecurity]
+
+[modsec-json]
+enabled = true
+filter = modsec-json
+logpath = /var/log/nginx/modsec_audit.log
+maxretry = 1
+findtime = 600
+bantime = 120
+ignoreip = 10.99.88.114 10.99.88.86
+# 10.99.88.237
+action = iptables-multiport[name=MODSECJSON, port="http,https"]
+         telegram[name=modsec-json]
+
+[nginx-sql-injection]
+enabled = true
+port = http,https
+filter = nginx-sql-injection
+logpath = /var/log/nginx/access.log
+maxretry = 1
+findtime = 600
+bantime = 3600
+action = iptables-multiport[name=SQL-INJECTION, port="http,https"]
+         telegram[name=nginx-sql-injection]
+
+[mysqld-auth]
+enabled = true
+port = 3306
+filter = mysqld-auth
+logpath = /var/log/mysql/error.log
+maxretry = 5
+findtime = 600
+bantime = 3600
+action = iptables-multiport[name=MYSQL-AUTH, port="3306"]
+         telegram[name=mysqld-auth]

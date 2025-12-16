@@ -1,0 +1,36 @@
+# Crea tutti i filtri
+sudo tee /etc/fail2ban/filter.d/nginx-noscript.conf > /dev/null << 'EOF'
+[Definition]
+failregex = ^<HOST> - .*"(GET|POST|PUT|DELETE|PATCH) .*?\.php.* HTTP
+ignoreregex =
+EOF
+
+sudo tee /etc/fail2ban/filter.d/nginx-badbots.conf > /dev/null << 'EOF'
+[Definition]
+failregex = ^<HOST> - .*"(Googlebot|bingbot|curl|wget|nikto|sqlmap|masscan|nmap)"
+ignoreregex =
+EOF
+
+sudo tee /etc/fail2ban/filter.d/modsecurity.conf > /dev/null << 'EOF'
+[Definition]
+failregex = ^\[.*\] <HOST> -
+ignoreregex =
+EOF
+
+sudo tee /etc/fail2ban/filter.d/modsec-json.conf > /dev/null << 'EOF'
+[Definition]
+failregex = "client_ip"\s*:\s*"<HOST>"
+ignoreregex =
+EOF
+
+sudo tee /etc/fail2ban/filter.d/nginx-sql-injection.conf > /dev/null << 'EOF'
+[Definition]
+failregex = ^<HOST> - .*"(GET|POST|PUT|DELETE|PATCH) .*?(union|select|insert|delete|drop|update|exec|execute).* HTTP
+ignoreregex =
+EOF
+
+sudo tee /etc/fail2ban/filter.d/nginx-xss.conf > /dev/null << 'EOF'
+[Definition]
+failregex = ^<HOST> - .*"(GET|POST|PUT|DELETE|PATCH) .*?(<script|javascript:|onerror=|onclick=|alert\().* HTTP
+ignoreregex =
+EOF

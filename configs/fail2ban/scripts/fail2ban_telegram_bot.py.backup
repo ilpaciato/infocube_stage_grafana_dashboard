@@ -1,0 +1,174 @@
+#!/home/infocube/fail2ban-bot-env/bin/python3
+
+import telebot
+import subprocess
+import logging
+from datetime import datetime
+
+BOT_TOKEN = '8313901235:AAEzgEGbYe-gqptG2elz_YdHQOeHPWPkbZ0'
+ADMIN_CHAT_ID = 815953650
+LOG_FILE = '/var/log/fail2ban-bot.log'
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+bot = telebot.TeleBot(BOT_TOKEN)
+
+# ========== COMANDO /start ==========
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    welcome_text = """
+🔐 **Fail2ban Telegram Monitor**
+━━━━━━━━━━━━━━━━━━━━━━
+MODALITÀ: **READ-ONLY + UNBAN ONLY**
+
+📢 Riceverai notifiche automatiche:
+• 🔐 Avvio del servizio
+• 🚨 Quando un IP viene bannato
+• ✅ Quando un IP viene sbannato
+
+✅ Comandi disponibili:
+/status - Mostra status di fail2ban
+/unban <ip> -j <jail> - Sbanna manualmente un IP
+/help - Lista comandi
+
+⚠️ Telegram NON esegue ban, solo notifiche
+    """
+    bot.reply_to(message, welcome_text, parse_mode='Markdown')
+    logging.info(f"User {message.chat.id} ha richiesto /start")
+
+# ========== COMANDO /status ==========
+@bot.message_handler(commands=['status'])
+def send_status(message):
+    try:
+        result = subprocess.run(
+            "sudo fail2ban-client status",
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        
+        if result.returncode == 0:
+            status = result.stdout
+            response = f"""
+📊 **FAIL2BAN STATUS**
+━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            """
+            bot.reply_to(message, response, parse_mode='Markdown')
+            logging.info(f"User {message.chat.id} ha richiesto /status")
+        else:
+            bot.reply_to(message, "❌ Errore nel recuperare lo status")
+            
+    except Exception as e:
+        bot.reply_to(message, f"❌ Errore: {str(e)}")
+        logging.error(f"Errore /status: {str(e)}")
+
+# ========== COMANDO /unban ==========
+@bot.message_handler(commands=['unban'])
+def unban_ip(message):
+    try:
+        # Estrai IP e jail dal messaggio
+        # Formato: /unban <ip> -j <jail>
+        args = message.text.split()
+        
+        if len(args) < 4 or args != '-j':
+            bot.reply_to(message, """
+❌ Formato errato!
+
+Usa: /unban <ip> -j <jail>
+
+Esempio:
+/unban 192.168.1.100 -j sshd
+/unban 10.0.0.5 -j nginx-http-auth
+            """)
+            return
+        
+        ip = args
+        jail = args
+        
+        # Valida IP (semplice check)
+        parts = ip.split('.')
+        if len(parts) != 4 or not all(0 <= int(p) <= 255 for p in parts):
+            bot.reply_to(message, f"❌ IP non valido: {ip}")
+            return
+        
+        # Esegui unban
+        result = subprocess.run(
+            f"sudo fail2ban-client set {jail} unbanip {ip}",
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+        
+        if result.returncode == 0:
+            response = f"""
+✅ **UNBAN ESEGUITO**
+━━━━━━━━━━━━━━━━━━━━━━
+🎯 IP: {ip}
+📁 Jail: {jail}
+⏰ Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+            """
+            bot.reply_to(message, response, parse_mode='Markdown')
+            logging.info(f"User {message.chat.id} ha sbannato {ip} dalla jail {jail}")
+        else:
+            bot.reply_to(message, f"❌ Errore nell'unban: {result.stderr}")
+            logging.error(f"Errore unban: {result.stderr}")
+            
+    except Exception as e:
+        bot.reply_to(message, f"❌ Errore: {str(e)}")
+        logging.error(f"Errore /unban: {str(e)}")
+
+# ========== COMANDO /help ==========
+@bot.message_handler(commands=['help'])
+def send_help(message):
+    help_text = """
+📖 **Comandi Disponibili**
+━━━━━━━━━━━━━━━━━━━━━━
+
+**/status**
+Mostra lo status di fail2ban e tutte le jail
+
+**/unban <ip> -j <jail>**
+Sbanna manualmente un IP da una jail
+Esempio: `/unban 192.168.1.100 -j sshd`
+
+**/help**
+Questo messaggio
+
+━━━━━━━━━━━━━━━━━━━━━━
+📢 Notifiche Automatiche:
+• 🔐 Avvio del servizio
+• 🚨 Ban di un IP
+• ✅ Unban di un IP
+
+⚠️ MODALITÀ: **READ-ONLY + UNBAN ONLY**
+Telegram riceve solo notifiche e esegue unban
+    """
+    bot.reply_to(message, help_text, parse_mode='Markdown')
+
+# ========== HANDLER MESSAGGI SCONOSCIUTI ==========
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    response = """
+❓ Comando non riconosciuto
+
+Comandi disponibili:
+/start - Benvenuto
+/status - Status di fail2ban
+/unban <ip> -j <jail> - Sbanna manualmente
+/help - Lista comandi
+    """
+    bot.reply_to(message, response)
+
+# ========== MAIN ==========
+if __name__ == '__main__':
+    logging.info("Bot avviato in MODALITÀ READ-ONLY + UNBAN ONLY")
+    print("✅ Bot avviato - Modalità: READ-ONLY + UNBAN ONLY")
+    bot.infinity_polling()

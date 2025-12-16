@@ -1,0 +1,17 @@
+[Unit]
+Description=Fail2ban Telegram Bot (Python)
+After=network.target fail2ban.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/infocube/fail2ban-bot-env
+ExecStart=/home/infocube/fail2ban-bot-env/bin/python3 /etc/fail2ban/scripts/fail2ban_telegram_bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment="PATH=/home/infocube/fail2ban-bot-env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+[Install]
+WantedBy=multi-user.target

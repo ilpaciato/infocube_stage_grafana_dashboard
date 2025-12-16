@@ -1,0 +1,14 @@
+[Unit]
+Description=Disk Space Exporter for Prometheus
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/disk_exporter
+ExecStart=/usr/bin/python3 /opt/disk_exporter/disk_exporter.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
