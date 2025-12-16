@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 0,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -28,6 +28,255 @@
         "w": 24,
         "x": 0,
         "y": 0
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Storage",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ff3e85eb817gga"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ff3e85eb817gga"
+          },
+          "editorMode": "code",
+          "expr": "log_directory_size_bytes / 1024^3\r\n",
+          "legendFormat": "{{exported_service}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Log size",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ff3e85eb817gga"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": [],
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 5,
+        "x": 6,
+        "y": 1
+      },
+      "id": 38,
+      "options": {
+        "displayLabels": [
+          "name",
+          "value"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ff3e85eb817gga"
+          },
+          "editorMode": "code",
+          "expr": "disk_usage_bytes{partition=\"/\"} / 1024^3",
+          "legendFormat": "{{type}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Disk Usage",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "ff3e85eb817gga"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 13,
+        "x": 11,
+        "y": 1
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "ff3e85eb817gga"
+          },
+          "editorMode": "code",
+          "expr": "disk_usage_bytes{partition=\"/\",type=\"used\"} / 1024^3",
+          "legendFormat": "{{service}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Trend usage",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
       },
       "id": 26,
       "panels": [],
@@ -65,7 +314,7 @@
         "h": 4,
         "w": 24,
         "x": 0,
-        "y": 1
+        "y": 10
       },
       "id": 30,
       "options": {
@@ -119,6 +368,7 @@
               "viz": false
             }
           },
+          "links": [],
           "mappings": []
         },
         "overrides": []
@@ -127,7 +377,7 @@
         "h": 11,
         "w": 7,
         "x": 0,
-        "y": 5
+        "y": 14
       },
       "id": 25,
       "options": {
@@ -197,7 +447,7 @@
         "h": 11,
         "w": 10,
         "x": 7,
-        "y": 5
+        "y": 14
       },
       "id": 27,
       "options": {
@@ -264,7 +514,7 @@
         "h": 11,
         "w": 7,
         "x": 17,
-        "y": 5
+        "y": 14
       },
       "id": 28,
       "options": {
@@ -335,7 +585,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 16
+        "y": 25
       },
       "id": 29,
       "options": {
@@ -419,7 +669,7 @@
         "h": 17,
         "w": 14,
         "x": 10,
-        "y": 16
+        "y": 25
       },
       "id": 24,
       "options": {
@@ -588,7 +838,7 @@
         "h": 7,
         "w": 10,
         "x": 0,
-        "y": 26
+        "y": 35
       },
       "id": 31,
       "options": {
@@ -650,7 +900,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 42
       },
       "id": 19,
       "panels": [],
@@ -674,6 +924,13 @@
             },
             "inspect": false
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Check on AbuseIPDB",
+              "url": "https://www.abuseipdb.com/check/${__data.fields.ip}"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -717,7 +974,7 @@
         "h": 5,
         "w": 9,
         "x": 0,
-        "y": 34
+        "y": 43
       },
       "id": 12,
       "options": {
@@ -760,7 +1017,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "ef3zckd0stlvkd"
+        "uid": "ff3e85eb817gga"
       },
       "fieldConfig": {
         "defaults": {
@@ -822,7 +1079,7 @@
         "h": 5,
         "w": 3,
         "x": 9,
-        "y": 34
+        "y": 43
       },
       "id": 11,
       "options": {
@@ -843,7 +1100,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "ef3zckd0stlvkd"
+            "uid": "ff3e85eb817gga"
           },
           "editorMode": "code",
           "expr": "sum(fail2ban_banned_total)",
@@ -902,7 +1159,7 @@
         "h": 5,
         "w": 3,
         "x": 12,
-        "y": 34
+        "y": 43
       },
       "id": 2,
       "options": {
@@ -964,7 +1221,7 @@
         "h": 5,
         "w": 2,
         "x": 15,
-        "y": 34
+        "y": 43
       },
       "id": 16,
       "options": {
@@ -1023,7 +1280,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1069,7 +1326,7 @@
         "h": 5,
         "w": 4,
         "x": 17,
-        "y": 34
+        "y": 43
       },
       "id": 7,
       "options": {
@@ -1121,7 +1378,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1167,7 +1424,7 @@
         "h": 5,
         "w": 3,
         "x": 21,
-        "y": 34
+        "y": 43
       },
       "id": 15,
       "options": {
@@ -1217,6 +1474,13 @@
             "wrapText": false
           },
           "fieldMinMax": false,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "Check on AbuseIPDB",
+              "url": "https://www.abuseipdb.com/check/${__data.fields.IP}"
+            }
+          ],
           "mappings": [
             {
               "options": {
@@ -1394,7 +1658,7 @@
         "h": 8,
         "w": 9,
         "x": 0,
-        "y": 39
+        "y": 48
       },
       "id": 18,
       "options": {
@@ -1494,7 +1758,7 @@
         "h": 8,
         "w": 3,
         "x": 9,
-        "y": 39
+        "y": 48
       },
       "id": 14,
       "options": {
@@ -1560,7 +1824,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 12,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1606,7 +1870,7 @@
         "h": 7,
         "w": 5,
         "x": 12,
-        "y": 39
+        "y": 48
       },
       "id": 32,
       "options": {
@@ -1659,7 +1923,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 11,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1705,7 +1969,7 @@
         "h": 7,
         "w": 7,
         "x": 17,
-        "y": 39
+        "y": 48
       },
       "id": 1,
       "options": {
@@ -1756,7 +2020,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
-            "drawStyle": "line",
+            "drawStyle": "bars",
             "fillOpacity": 20,
             "gradientMode": "scheme",
             "hideFrom": {
@@ -1803,7 +2067,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 46
+        "y": 55
       },
       "id": 9,
       "options": {
@@ -1842,14 +2106,147 @@
         "uid": "ff3e8bjmtnl6oe"
       },
       "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "fieldMinMax": false,
+          "links": [],
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 56
+      },
+      "id": 39,
+      "options": {
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ff3e8bjmtnl6oe"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by (rule_id) (count_over_time({job=\"modsecurity\"} \r\n|~ \"ModSecurity\" \r\n|~ \"\\\\[id \\\"\" \r\n| regexp `id\\s\"(?P<rule_id>[0-9]+)\"` \r\n| rule_id != \"949110\" \r\n[$__range]))          ",
+          "legendFormat": "{{rule_id}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Attack Type Distribution",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*942.*",
+            "renamePattern": "SQL Injection"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*941.*",
+            "renamePattern": "Cross-Site Scripting (XSS)"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*932.*",
+            "renamePattern": "Remote Code Execution (RCE)"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*930.*",
+            "renamePattern": "Local File Inclusion (LFI)"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*920.*",
+            "renamePattern": "Protocol Violation HTTP"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*933.*",
+            "renamePattern": "PHP Injection"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*913.*",
+            "renamePattern": "Scanner / Bot"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*949110.*",
+            "renamePattern": "Inbound Anomaly Score"
+          }
+        }
+      ],
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "ff3e8bjmtnl6oe"
+      },
+      "fieldConfig": {
         "defaults": {},
         "overrides": []
       },
       "gridPos": {
         "h": 7,
         "w": 12,
-        "x": 0,
-        "y": 47
+        "x": 12,
+        "y": 63
       },
       "id": 17,
       "options": {
@@ -1884,7 +2281,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 70
       },
       "id": 20,
       "panels": [],
@@ -1904,7 +2301,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 55
+        "y": 71
       },
       "id": 23,
       "options": {
@@ -1946,7 +2343,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 55
+        "y": 71
       },
       "id": 22,
       "options": {
@@ -1988,7 +2385,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 79
       },
       "id": 21,
       "options": {
@@ -2027,12 +2424,12 @@
     "list": []
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Server 114 Dashboard",
   "uid": "adgpjvs",
-  "version": 94
+  "version": 125
 }
